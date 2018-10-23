@@ -1,14 +1,21 @@
 #
+DESCRIPTION = "Rockchip binary loader, uses Streamit manifest"
 
-DESCRIPTION = "Rockchip binary loader, uses yocto-old branch"
+# override the SRC_URI to a known safe source eventhough we dont use it
+# this is preferable to an empty SRC_URI to disable fetching
+SRC_URI = "git://github.com/streamitbv/rkbin.git"
+SRCREV = "${AUTOREV}"
 
-#LICENSE = "BINARY"
-#LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=564e729dd65db6f65f911ce0cd340cf9"
-#NO_GENERIC_LICENSE[BINARY] = "LICENSE.TXT"
+LIC_FILES_CHKSUM = "file://${TOPDIR}/../rkbin/LICENSE.TXT;md5=564e729dd65db6f65f911ce0cd340cf9"
 
-SRC_URI = "git://github.com/rockchip-linux/rkbin.git;branch=yocto-old"
-SRCREV = "f64ded672836b47db3f6a0d04d8ccb4180fb3d55"
+do_deploy () {
+        install -d ${RKBINARY_DEPLOY_DIR}
+        [ ${DDR} ] && cp ${TOPDIR}/../rkbin/${DDR} ${RKBINARY_DEPLOY_DIR}/${DDR_BIN}
+        [ ${MINILOADER} ] && cp ${TOPDIR}/../rkbin/${MINILOADER} ${RKBINARY_DEPLOY_DIR}/${MINILOADER_BIN}
+        [ ${LOADER} ] && cp ${TOPDIR}/../rkbin/${LOADER} ${RKBINARY_DEPLOY_DIR}/${LOADER_BIN}
+        [ ${ATF} ] && cp ${TOPDIR}/../rkbin/${ATF} ${RKBINARY_DEPLOY_DIR}/${ATF_BIN}
 
-#SRC_URI = "git://github.com/rockchip-linux/rkbin.git"
-#SRCREV = "${AUTOREV}"
+        # Don't remove it!
+        echo "done"
+}
 
